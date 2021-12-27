@@ -31,35 +31,47 @@ ui <- dashboardPage(
         tabName = "vaccineboard",
         fluidRow(
           box(
-            height = 120,
+            height = 150,
             width = 2,
-            title = "Fødselsdag",
+            title = "Fødselsdato",
             dateInput('bdate',
                       label = 'Fødselsdato:',
                       value = Sys.Date()),
           ),
           box(
             width = 10,
-            "Vaccine plot",
+            "Vaccine timeline",
             plotOutput("vaccine_plot"),
-            height = 120
+            height = 150
           )
         ),
-        
+
         ### vacciner
         fluidRow(
           box(
             title = "Det danske vaccinationsprogram",
             width = 4,
-            
             dateInput('dtkp1',
-                      label = 'difteri-tetanus-kighoste-polio-Hib 1 og PCV-12:',
+                      label = 'Pentavac (DiTeKiPol-Hib):',
                       value = as.Date(NA)),
             dateInput('dtkp2',
-                      label = 'difteri-tetanus-kighoste-polio-Hib 1 og PCV-12:',
+                      label = 'Pentavac (DiTeKiPol-Hib):',
                       value = as.Date(NA)),
             dateInput('dtkp3',
-                      label = 'difteri-tetanus-kighoste-polio-Hib 1 og PCV-12:',
+                      label = 'Pentavac (DiTeKiPol-Hib):',
+                      value = as.Date(NA)),
+            dateInput('dtkp4',
+                      label = 'Tetravac (DiTeKiPol):',
+                      value = as.Date(NA)),
+
+            dateInput('pcv1',
+                      label = 'PCV-12:',
+                      value = as.Date(NA)),
+            dateInput('pcv2',
+                      label = 'PCV-12:',
+                      value = as.Date(NA)),
+            dateInput('pcv3',
+                      label = 'PCV-12:',
                       value = as.Date(NA)),
             dateInput('mfr1',
                       label = 'MFR:',
@@ -67,9 +79,7 @@ ui <- dashboardPage(
             dateInput('mfr2',
                       label = 'MFR:',
                       value = as.Date(NA)),
-            dateInput('dtkp4',
-                      label = 'difteri-tetanus-kighoste-polio revaccination:',
-                      value = as.Date(NA)),
+
             dateInput('hpv1',
                       label = 'HPV 1:',
                       value = as.Date(NA)),
@@ -77,19 +87,11 @@ ui <- dashboardPage(
                       label = 'HPV 2:',
                       value = as.Date(NA))
           ),
-          
+
           box(
             width = 8,
-            title = "Di-Te-Ki-Po-Hib 1 (Pentavac)",
+            title = "Pentavac (DiTeKiPol-Hib)",
             #textOutput("dateTextbdate"),
-            textOutput("dateTextdtkphib1"),
-            textOutput("dateTextdtkphib2"),
-            textOutput("dateTextdtkphib3"),
-            textOutput("dateTextdtkphib4")
-          ),
-          box(
-            width = 8,
-            title = "Di-Te-Ki-Po (Tetravac)",
             textOutput("dateTextdtkp1"),
             textOutput("dateTextdtkp2"),
             textOutput("dateTextdtkp3"),
@@ -99,7 +101,8 @@ ui <- dashboardPage(
             width = 8,
             title = "PCV",
             textOutput("dateTextpcv1"),
-            textOutput("dateTextpcv2")
+            textOutput("dateTextpcv2"),
+            textOutput("dateTextpcv3")
           ),
           box(
             width = 8,
@@ -114,8 +117,8 @@ ui <- dashboardPage(
             textOutput("dateTexthpv2")
             #textOutput("dateTextbdate"
           )
-          
-          
+
+
         ),
         fluidRow(
           ## Andre vacciner -----------------------------------
@@ -128,72 +131,85 @@ ui <- dashboardPage(
                      fluidRow(
                        box(
                          width = 2,
+                         title = "Di-Te-Ki-Po",
+                         dateInput('dtkp_other1',
+                                   label = 'Di-Te-Ki-Po',
+                                   value = as.Date(NA)),
+                         dateInput('dtkp_other2',
+                                   label = 'Di-Te-Ki-Po',
+                                   value = as.Date(NA)),
+                         dateInput('dtkp_other3',
+                                   label = 'Di-Te-Ki-Po',
+                                   value = as.Date(NA)),
+                       ),
+                       box(
+                         width = 2,
                          title = "Difteri",
-                         dateInput('difteri-other1',
+                         dateInput('di_other1',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
-                         dateInput('difteri-other2',
+                         dateInput('di_other2',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
-                         dateInput('difteri-other3',
+                         dateInput('di_other3',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
                        ),
                        box(
                          width = 2,
                          title = "Tetanus",
-                         dateInput('te-other1',
+                         dateInput('te_other1',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
-                         dateInput('te-other2',
+                         dateInput('te_other2',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
-                         dateInput('te-other3',
+                         dateInput('te_other3',
                                    label = 'Difteri',
                                    value = as.Date(NA)),
-                         
+
                        ),
                        box(
                          width = 2,
                          title = "Kighose",
-                         dateInput('ki-other1',
+                         dateInput('ki_other1',
                                    label = 'Kighoste',
                                    value = as.Date(NA)),
-                         dateInput('ki-other2',
+                         dateInput('ki_other2',
                                    label = 'Kighoste',
                                    value = as.Date(NA)),
-                         dateInput('ki-other3',
+                         dateInput('ki_other3',
                                    label = 'Kighoste',
                                    value = as.Date(NA)),
-                         
+
                        ),
                        box(
                          width = 2,
                          title = "Polio",
-                         dateInput('po-other1',
+                         dateInput('po_other1',
                                    label = 'Polio',
                                    value = as.Date(NA)),
-                         dateInput('po-other2',
+                         dateInput('po_other2',
                                    label = 'Polio',
                                    value = as.Date(NA)),
-                         dateInput('po-other3',
+                         dateInput('po_other3',
                                    label = 'Polio',
                                    value = as.Date(NA)),
-                         
+
                        ),
                        box(
                          width = 2,
                          title = "HiB",
-                         dateInput('hib-other1',
+                         dateInput('hib_other1',
                                    label = 'HiB',
                                    value = as.Date(NA)),
-                         dateInput('hib-other2',
+                         dateInput('hib_other2',
                                    label = 'HiB',
                                    value = as.Date(NA)),
-                         dateInput('hib-other3',
+                         dateInput('hib_other3',
                                    label = 'HiB',
                                    value = as.Date(NA)),
-                         
+
                        ),
                      )),
             ## PCV ---------------------
@@ -207,7 +223,7 @@ ui <- dashboardPage(
                                  label = 'PCV2',
                                  value = as.Date(NA))
                      ))),
-            
+
             ## MFR --------------------------------------------
             tabPanel(title = "MFR",
                      fluidRow(
@@ -230,7 +246,7 @@ ui <- dashboardPage(
                          dateInput('f_other2',
                                    label = 'Fåresyge',
                                    value = as.Date(NA))
-                         
+
                        ),
                        box(
                          width = 4,
@@ -256,7 +272,7 @@ ui <- dashboardPage(
                      ))),
             tabPanel('Medias', tableOutput("show_inputs")),
             tabPanel('test', tableOutput("show_test"))
-            
+
           )
         )
       ),
@@ -287,11 +303,11 @@ ui <- dashboardPage(
 server <- function(input, output, session) {
   output$instructions <-
     renderText("Text om det danske vaccineprogram")
-  
+
   output$dateTextbdate  <- renderText({
     paste("Fødselsdato er ", as.character(input$bdate))
   })
-  
+
   ### updating inputs based on other vaccines
   observe({
     if (isTruthy(input$m_other1) &
@@ -312,9 +328,74 @@ server <- function(input, output, session) {
         value = pmax(input$m_other2, input$f_other2, input$r_other2)
       )
     }
-    
+    if (isTruthy(input$di_other1) &
+        isTruthy(input$te_other1) & isTruthy(input$ki_other1) &
+        isTruthy(input$po_other1)) {
+      updateDateInput(
+        session,
+        "dtkp_other1",
+        label = "new",
+        value = pmax(
+          input$di_other1,
+          input$te_other1,
+          input$ki_other1,
+          input$po_other1
+        )
+      )
+    }
+    if (isTruthy(input$di_other2) &
+        isTruthy(input$te_other2) & isTruthy(input$ki_other2) &
+        isTruthy(input$po_other2)) {
+      updateDateInput(
+        session,
+        "dtkp_other2",
+        label = "new",
+        value = pmax(
+          input$di_other2,
+          input$te_other2,
+          input$ki_other2,
+          input$po_other2
+        )
+      )
+    }
+    if (isTruthy(input$di_other3) &
+        isTruthy(input$te_other3) & isTruthy(input$ki_other3) &
+        isTruthy(input$po_other3)) {
+      updateDateInput(
+        session,
+        "dtkp_other3",
+        label = "new",
+        value = pmax(
+          input$di_other3,
+          input$te_other3,
+          input$ki_other3,
+          input$po_other3
+        )
+      )
+    }
+    if (isTruthy(input$di_other4) &
+        isTruthy(input$te_other4) & isTruthy(input$ki_other4) &
+        isTruthy(input$po_other4)) {
+      updateDateInput(
+        session,
+        "dtkp_other4",
+        label = "new",
+        value = pmax(
+          input$di_other4,
+          input$te_other4,
+          input$ki_other4,
+          input$po_other4
+        )
+      )
+    }
+
+
+
+
+
+
   })
-  
+
   AllInputs <- reactive({
     myvalues <- NULL
     newvalues <- NULL
@@ -325,16 +406,17 @@ server <- function(input, output, session) {
     }
     myvalues[dates != "TRUE" & !is.na(dates)]
   })
-  
+
   output$show_inputs <- renderTable({
     AllInputs()
   })
-  
+
+  ### MFR vaccine
   mfr <- reactive({
     mfr1_date = NULL
     mfr2_date = NULL
     today = as_date(Sys.Date(), origin = "1970-01-01")
-    
+
     if (!isTruthy(input$mfr1)) {
       #MFR ikke givet
       if (input$bdate + months(15) > today) {
@@ -376,22 +458,23 @@ server <- function(input, output, session) {
           mfr1_date = today
           mfr2_date = today + 365 * 2.5
         }
-        
+
       }
     }
     mfr1_text = as.character(as_date(mfr1_date, origin = "1970-01-01"))
     mfr2_text = as.character(as_date(mfr2_date, origin = "1970-01-01"))
-    
+
     rbind(mfr1_text, mfr2_text)
   })
-  
+
+  #### DTKP
   dtkp <- reactive({
     dtkp1_date = input$bdate + 30 * 3
     dtkp2_date = input$bdate + 30 * 5
     dtkp3_date = input$bdate + 365
     dtkp4_date = input$bdate + 365 * 5
     today = as_date(Sys.Date(), origin = "1970-01-01")
-    
+
     #    if ((isTruthy(input$dtkp1) | input$dtkp1 < input$bdate + 8*7)) {
     #DTKP ikke givet eller under 8 uger
     # følge vaccine
@@ -403,7 +486,7 @@ server <- function(input, output, session) {
         dtkp2_date = input$dtkp1 + 60
         dtkp3_date = dtkp2_date + 30 * 6
         dtkp4_date = dtkp3_date + 365 * 4
-        
+
         if (isTruthy(input$dtkp2)) {
           # hvis 2 vacciner givet
           if (input$dtkp1 + 30 < input$dtkp2) {
@@ -411,23 +494,23 @@ server <- function(input, output, session) {
             dtkp2_date = input$dtkp2
             dtkp3_date = dtkp2_date + 30 * 6
             dtkp4_date = dtkp3_date + 365 * 4
-            
-            if(isTruthy(input$dtkp3)) {
-              if(input$dtkp2 + 30*6 < input$dtkp3) {
+
+            if (isTruthy(input$dtkp3)) {
+              if (input$dtkp2 + 30 * 6 < input$dtkp3) {
                 dtkp3_date = input$dtkp3
                 dtkp4_date = dtkp3_date + 365 * 4
-                
-                if(isTruthy(input$dtk4)) {
-                  if(input$dtkp3 + 365*4 < input$dtkp4) {
+
+                if (isTruthy(input$dtk4)) {
+                  if (input$dtkp3 + 365 * 4 < input$dtkp4) {
                     dtkp4_date = input$dtkp4
-                    
+
                   }
                 }
-                
+
               }
-              
+
             }
-            
+
           } else {
             # hvis to vacciner givet med UNDER 1 måned
             dtkp1_date = input$dtkp1
@@ -435,79 +518,418 @@ server <- function(input, output, session) {
             dtkp3_date = dtkp2_date + 30 * 6
             dtkp4_date = dtkp3_date + 365 * 4
           }
-          
+
         }
-        
+
       }
     }
-    
-    
+
+
     dtkp1_text = as.character(as_date(dtkp1_date, origin = "1970-01-01"))
     dtkp2_text = as.character(as_date(dtkp2_date, origin = "1970-01-01"))
     dtkp3_text = as.character(as_date(dtkp3_date, origin = "1970-01-01"))
     dtkp4_text = as.character(as_date(dtkp4_date, origin = "1970-01-01"))
-    
+
     rbind(dtkp1_text, dtkp2_text, dtkp3_text, dtkp4_text)
   })
-  
-  output$show_test <- renderTable({
-    dtkp()
+
+  # polio <- reactive({
+  #   pol1_date = input$bdate + 30 * 3
+  #   pol2_date = input$bdate + 30 * 5
+  #   pol3_date = input$bdate + 365
+  #   pol4_date = input$bdate + 365 * 5
+  #   today = as_date(Sys.Date(), origin = "1970-01-01")
+  #
+  #   #    if ((isTruthy(input$dtkp1) | input$dtkp1 < input$bdate + 8*7)) {
+  #   #DTKP ikke givet eller under 8 uger
+  #   # følge vaccine
+  #   #    } else {
+  #   if (isTruthy(input$dtkp1)) {
+  #     # mere end 8 uger på vaccine tidspunkt
+  #     if (input$dtkp1 > input$bdate + 8 * 7) {
+  #       dtkp1_date = input$dtkp1
+  #       dtkp2_date = input$dtkp1 + 60
+  #       dtkp3_date = dtkp2_date + 30 * 6
+  #       dtkp4_date = dtkp3_date + 365 * 4
+  #
+  #       if (isTruthy(input$dtkp2)) {
+  #         # hvis 2 vacciner givet
+  #         if (input$dtkp1 + 30 < input$dtkp2) {
+  #           # hvis to vacciner givet med over 1 måned
+  #           dtkp2_date = input$dtkp2
+  #           dtkp3_date = dtkp2_date + 30 * 6
+  #           dtkp4_date = dtkp3_date + 365 * 4
+  #
+  #           if (isTruthy(input$dtkp3)) {
+  #             if (input$dtkp2 + 30 * 6 < input$dtkp3) {
+  #               dtkp3_date = input$dtkp3
+  #               dtkp4_date = dtkp3_date + 365 * 4
+  #
+  #               if (isTruthy(input$dtk4)) {
+  #                 if (input$dtkp3 + 365 * 4 < input$dtkp4) {
+  #                   dtkp4_date = input$dtkp4
+  #
+  #                 }
+  #               }
+  #
+  #             }
+  #
+  #           }
+  #
+  #         } else {
+  #           # hvis to vacciner givet med UNDER 1 måned
+  #           dtkp1_date = input$dtkp1
+  #           dtkp2_date = input$dtkp1 + 60
+  #           dtkp3_date = dtkp2_date + 30 * 6
+  #           dtkp4_date = dtkp3_date + 365 * 4
+  #         }
+  #
+  #       }
+  #
+  #     }
+  #   }
+  #
+  #
+  #   dtkp1_text = as.character(as_date(dtkp1_date, origin = "1970-01-01"))
+  #   dtkp2_text = as.character(as_date(dtkp2_date, origin = "1970-01-01"))
+  #   dtkp3_text = as.character(as_date(dtkp3_date, origin = "1970-01-01"))
+  #   dtkp4_text = as.character(as_date(dtkp4_date, origin = "1970-01-01"))
+  #
+  #   rbind(dtkp1_text, dtkp2_text, dtkp3_text, dtkp4_text)
+  # })
+
+  ### PCV
+  pcv <- reactive({
+    pcv1_date = input$bdate + 30 * 3
+    pcv2_date = input$bdate + 30 * 5
+    pcv3_date = input$bdate + 365
+    today = as_date(Sys.Date(), origin = "1970-01-01")
+
+
+    if (isTruthy(input$pcv1)) {
+      # børn mindre end et år skal have tre vacciner
+      if (input$pcv1 < input$bdate + 365) {
+        pcv1_date = input$pcv1
+        pcv2_date = input$pcv1 + 60
+        pcv3_date = pcv2_date + 30 * 6
+
+        if (isTruthy(input$pcv2)) {
+          # hvis 2 vacciner givet
+          if (input$pcv1 + 30 < input$pcv2) {
+            # hvis to vacciner givet med over 1 måned
+            pcv2_date = input$pcv2
+            pcv3_date = pcv2_date + 30 * 6
+
+            if (isTruthy(input$pcv3)) {
+              # hvis tre vacciner givet med over 2 måned
+              if (input$pcv2 + 30 * 2 < input$pcv3) {
+                pcv3_date = input$pcv3
+
+              }
+
+            }
+
+          }
+
+        }
+
+      } else {
+        # hvis to vacciner givet med UNDER 1 måned
+        pcv1_date = input$pcv1
+        if (isTruthy(input$pcv2)) {
+          # hvis 2 vacciner givet
+          if (input$pcv1 + 30 < input$pcv2) {
+            # hvis to vacciner givet med over 1 måned
+            pcv2_date = input$pcv2
+
+
+          }
+        }
+      }
+      # if (input$bdate > today - 365 * 2) {
+      #   pcv1_text = as.character(as_date(pcv1_date, origin = "1970-01-01"))
+      #   pcv2_text = as.character(as_date(pcv2_date, origin = "1970-01-01"))
+      #   pcv3_text = as.character(as_date(pcv3_date, origin = "1970-01-01"))
+      # } else {
+      #   pcv1_text = "Børn over 2 skal kun vaccineres ved særlig høj risikogruppe"
+      #   pcv2_text = ""
+      #   pcv3_text = ""
+      # }
+
+    }
+    pcv1_text = as.character(as_date(pcv1_date, origin = "1970-01-01"))
+    pcv2_text = as.character(as_date(pcv2_date, origin = "1970-01-01"))
+    pcv3_text = as.character(as_date(pcv3_date, origin = "1970-01-01"))
+
+    rbind(pcv1_text, pcv2_text, pcv3_text)
+
   })
-  
-  
-  
+
+  ### HPV
+  hpv <- reactive({
+    hpv1_date = input$bdate + 365 * 12
+    hpv2_date = input$bdate + 365 * 12 + 30 * 6
+    hpv3_date = NA_Date_
+    today = as_date(Sys.Date(), origin = "1970-01-01")
+
+    if (isTruthy(input$hpv1)) {
+      # mere end 8 uger på vaccine tidspunkt
+      if (input$hpv1 > input$bdate + 12 * 365) {
+        hpv1_date = input$hpv1
+        hpv2_date = input$hpv1 + 30 * 6
+
+        if (isTruthy(input$hpv2)) {
+          # hvis 2 vacciner givet, skal det være inden for 5 måneder og max 13 måneder
+          if (input$hpv1 + 30 * 5 < input$hpv2 &
+              input$hpv1 + 30 * 13 > input$hpv2) {
+            # hvis to vacciner givet med over 1 måned
+            hpv2_date = input$hpv2
+          } else {
+            hpv_temp = input$hpv2 + 30 * 3
+            hpv3_date = min(hpv_temp, today)
+          }
+
+        }
+
+      }
+
+    } else {
+      # hvis to vacciner givet med UNDER 1 måned
+      hpv1_date = input$hpv1
+      hpv2_date = input$hpv1 + 60
+
+    }
+
+
+
+
+    hpv1_text = as.character(as_date(hpv1_date, origin = "1970-01-01"))
+    hpv2_text = as.character(as_date(hpv2_date, origin = "1970-01-01"))
+    hpv3_text = fifelse(is.na(hpv3_date), "", as.character(as_date(hpv3_date, origin = "1970-01-01")))
+
+    rbind(hpv1_text, hpv2_text, hpv3_text)
+  })
+
+
+
+
+  ### HIB
+  hib <- reactive({
+    hib1_date = input$bdate + 30 * 3
+    hib2_date = input$bdate + 30 * 5
+    hib3_date = input$bdate + 365
+    # barn har fået tetravac og ikke pentavac
+    if (isTruthy(input$dtkp_other1) & !isTruthy(input$dtkp1)) {
+      if (isTruthy(input$hib_other1)) {
+        # mere end 8 uger på vaccine tidspunkt
+        if (input$hib_other1 > input$bdate + 8 * 7) {
+          hib1_date = input$hib_other1
+          hib2_date = input$hib_other1 + 60
+          hib3_date = hib2_date + 30 * 6
+        }
+      }
+      # alder mellem 5-12 måneder
+      if (input$bdate + months(5) > today &
+          input$bdate + months(12) < today &
+          !isTruthy(hib_other1)) {
+        hib1_date = Sys.Date()
+        hib2_date = Sys.Date() + months(2)
+      }
+      if (input$bdate + months(5) > today &
+          input$bdate + months(12) < today &
+          !hib1_date == input$hib_other1) {
+        hib1_date = Sys.Date()
+      }
+    }
+    hib_date
+
+
+    if (isTruthy(input$dtkp1)) {
+      # mere end 8 uger på vaccine tidspunkt
+      if (input$dtkp1 > input$bdate + 8 * 7) {
+        dtkp1_date = input$dtkp1
+        dtkp2_date = input$dtkp1 + 60
+        dtkp3_date = dtkp2_date + 30 * 6
+        dtkp4_date = dtkp3_date + 365 * 4
+
+        if (isTruthy(input$dtkp2)) {
+          # hvis 2 vacciner givet
+          if (input$dtkp1 + 30 < input$dtkp2) {
+            # hvis to vacciner givet med over 1 måned
+            dtkp2_date = input$dtkp2
+            dtkp3_date = dtkp2_date + 30 * 6
+            dtkp4_date = dtkp3_date + 365 * 4
+
+            if (isTruthy(input$dtkp3)) {
+              if (input$dtkp2 + 30 * 6 < input$dtkp3) {
+                dtkp3_date = input$dtkp3
+                dtkp4_date = dtkp3_date + 365 * 4
+
+                if (isTruthy(input$dtk4)) {
+                  if (input$dtkp3 + 365 * 4 < input$dtkp4) {
+                    dtkp4_date = input$dtkp4
+
+                  }
+                }
+
+              }
+
+            }
+
+          } else {
+            # hvis to vacciner givet med UNDER 1 måned
+            dtkp1_date = input$dtkp1
+            dtkp2_date = input$dtkp1 + 60
+            dtkp3_date = dtkp2_date + 30 * 6
+            dtkp4_date = dtkp3_date + 365 * 4
+          }
+
+        }
+
+
+
+
+  })
+
+  output$show_test <- renderTable({
+    hib()
+  })
+
+
+
   output$vaccine_plot <- renderPlot(
     height = 100,
-    ggplot(AllInputs(), aes(x = as_date(dates), y = 1)) +
+
+    ggplot(AllInputs(), aes(
+      x = as_date(dates),
+      y = 1,
+      ,
+      col = as_date(dates) > Sys.Date()
+    )) +
       geom_point(size = 4) +
       ggrepel::geom_text_repel(aes(x = as_date(dates), label = vaccines)) +
       theme_bw() +
-      labs(y = "", x = "Dato") +
+      labs(y = "", x = "") +
+      guides(col = "none") +
+      ggsci::scale_color_d3() +
       theme(axis.text.y.left = element_blank())
   )
-  
-  
+
+
   ### DTKP
   output$dateTextdtkp1  <- renderText({
-    dtkp()[[1]]
+    paste0(
+      "Første vaccine med DTKP-Hib ",
+      ifelse(dtkp()[[1]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      dtkp()[[1]]
+    )
   })
-  
+
   output$dateTextdtkp2  <- renderText({
-    dtkp()[[2]]
+    paste0(
+      "Anden vaccine med DTKP-Hib ",
+      ifelse(dtkp()[[2]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      dtkp()[[2]]
+    )
   })
-  
+
   output$dateTextdtkp3  <- renderText({
-    dtkp()[[3]]
+    paste0(
+      "Tredje vaccine med DTKP-Hib ",
+      ifelse(dtkp()[[3]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      dtkp()[[3]]
+    )
   })
   output$dateTextdtkp4  <- renderText({
-    dtkp()[[4]]
-    
+    paste0(
+      "Booster vaccine med DTKP ",
+      ifelse(dtkp()[[4]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      dtkp()[[4]]
+    )
+
   })
+  ## PCV
+  output$dateTextpcv1  <- renderText({
+    paste0(
+      "Første vaccine med PCV ",
+      ifelse(pcv()[[1]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      pcv()[[1]]
+    )
+  })
+  output$dateTextpcv2  <- renderText({
+    paste0(
+      "Anden vaccine med PCV ",
+      ifelse(pcv()[[2]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      pcv()[[2]]
+    )
+  })
+  output$dateTextpcv3  <- renderText({
+    paste0(
+      "Tredje vaccine med PCV ",
+      ifelse(pcv()[[3]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      pcv()[[3]]
+    )
+  })
+
+
   ## MFR
   output$dateTextmfr1  <- renderText({
-    mfr()[[1]]
+    paste0(
+      "Første vaccine med MFR ",
+      ifelse(mfr()[[1]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      mfr()[[1]]
+    )
   })
   output$dateTextmfr2  <- renderText({
-    mfr()[[2]]
+    paste0(
+      "Anden vaccine med MFR ",
+      ifelse(mfr()[[2]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      mfr()[[2]]
+    )
   })
-  
-  
+
+
   output$dateTexthpv1  <- renderText({
-    if (!isTruthy(input$hpv1)) {
-      paste("hpv-1 skal gives", input$bdate + years(12))
-    } else {
-      paste("hpv-1 givet den", input$hpv1)
-    }
+    paste0(
+      "Første vaccine med HPV ",
+      ifelse(hpv()[[1]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      hpv()[[1]]
+    )
   })
+
   output$dateTexthpv2  <- renderText({
-    if (!isTruthy(input$hpv2)) {
-      paste("hpv-2 skal gives", input$bdate + years(12) + months(5))
+    paste0(
+      "Anden vaccine med HPV ",
+      ifelse(hpv()[[1]] > Sys.Date(), "skal gives", "er givet"),
+      " d. ",
+      hpv()[[1]]
+    )
+  })
+  output$dateTexthpv3  <- renderText({
+    if (hpv()[[3]] == "") {
+      paste0("Tredje vaccine med HPV skal kun gives ved misset interval")
+
     } else {
-      paste("hpv-2 givet den", input$hpv2)
+      paste0(
+        "Trejde vaccine med HPV ",
+        ifelse(hpv()[[3]] > Sys.Date(), "skal gives", "er givet"),
+        " d. ",
+        hpv()[[3]]
+      )
     }
   })
-  
-  
+
+
 }
 
 shinyApp(ui, server)
