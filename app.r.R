@@ -61,7 +61,7 @@ ui <- dashboardPage(
                       label = 'Pentavac (DiTeKiPol-Hib):',
                       value = as.Date(NA)),
             dateInput('dtkp4',
-                      label = 'Tetravac (DiTeKiPol):',
+                      label = 'Tetravac booster (DiTeKiPol):',
                       value = as.Date(NA)),
 
             dateInput('pcv1',
@@ -114,9 +114,11 @@ ui <- dashboardPage(
             width = 8,
             title = "HPV",
             textOutput("dateTexthpv1"),
-            textOutput("dateTexthpv2")
+            textOutput("dateTexthpv2"),
+            textOutput("dateTexthpv3"),
             #textOutput("dateTextbdate"
-          )
+          ),
+          uiOutput("hib_box")
 
 
         ),
@@ -315,7 +317,6 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "mfr1",
-        label = "new",
         value = pmax(input$m_other1, input$f_other1, input$r_other1)
       )
     }
@@ -324,7 +325,6 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "mfr2",
-        label = "new",
         value = pmax(input$m_other2, input$f_other2, input$r_other2)
       )
     }
@@ -334,7 +334,6 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "dtkp_other1",
-        label = "new",
         value = pmax(
           input$di_other1,
           input$te_other1,
@@ -349,7 +348,6 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "dtkp_other2",
-        label = "new",
         value = pmax(
           input$di_other2,
           input$te_other2,
@@ -364,7 +362,7 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "dtkp_other3",
-        label = "new",
+
         value = pmax(
           input$di_other3,
           input$te_other3,
@@ -379,7 +377,7 @@ server <- function(input, output, session) {
       updateDateInput(
         session,
         "dtkp_other4",
-        label = "new",
+
         value = pmax(
           input$di_other4,
           input$te_other4,
@@ -693,15 +691,7 @@ server <- function(input, output, session) {
 
       }
 
-    } else {
-      # hvis to vacciner givet med UNDER 1 måned
-      hpv1_date = input$hpv1
-      hpv2_date = input$hpv1 + 60
-
     }
-
-
-
 
     hpv1_text = as.character(as_date(hpv1_date, origin = "1970-01-01"))
     hpv2_text = as.character(as_date(hpv2_date, origin = "1970-01-01"))
@@ -718,8 +708,11 @@ server <- function(input, output, session) {
     hib1_date = input$bdate + 30 * 3
     hib2_date = input$bdate + 30 * 5
     hib3_date = input$bdate + 365
+    hib_special = 0
+    today = Sys.Date()
     # barn har fået tetravac og ikke pentavac
     if (isTruthy(input$dtkp_other1) & !isTruthy(input$dtkp1)) {
+      hib_special = 1
       if (isTruthy(input$hib_other1)) {
         # mere end 8 uger på vaccine tidspunkt
         if (input$hib_other1 > input$bdate + 8 * 7) {
@@ -727,73 +720,51 @@ server <- function(input, output, session) {
           hib2_date = input$hib_other1 + 60
           hib3_date = hib2_date + 30 * 6
         }
+        if (input$bdate + months(12) > today &
+            input$bdate + years(5) < today &
+            !hib1_date == input$hib_other1) {
+          hib1_date = Sys.Date()
+          hib2_date = NA_Date_
+          hib3_date = NA_Date_
+        }
+
       }
       # alder mellem 5-12 måneder
       if (input$bdate + months(5) > today &
           input$bdate + months(12) < today &
-          !isTruthy(hib_other1)) {
+          !isTruthy(input$hib_other1)) {
         hib1_date = Sys.Date()
         hib2_date = Sys.Date() + months(2)
-      }
-      if (input$bdate + months(5) > today &
-          input$bdate + months(12) < today &
-          !hib1_date == input$hib_other1) {
-        hib1_date = Sys.Date()
+        hib3_date = NA_Date_
       }
     }
-    hib_date
 
+    hib1_text = as.character(as_date(hib1_date, origin = "1970-01-01"))
+    hib2_text = as.character(as_date(hib2_date, origin = "1970-01-01"))
+    hib3_text = fifelse(is.na(hib3_date), "", as.character(as_date(hib3_date, origin = "1970-01-01")))
 
-    if (isTruthy(input$dtkp1)) {
-      # mere end 8 uger på vaccine tidspunkt
-      if (input$dtkp1 > input$bdate + 8 * 7) {
-        dtkp1_date = input$dtkp1
-        dtkp2_date = input$dtkp1 + 60
-        dtkp3_date = dtkp2_date + 30 * 6
-        dtkp4_date = dtkp3_date + 365 * 4
-
-        if (isTruthy(input$dtkp2)) {
-          # hvis 2 vacciner givet
-          if (input$dtkp1 + 30 < input$dtkp2) {
-            # hvis to vacciner givet med over 1 måned
-            dtkp2_date = input$dtkp2
-            dtkp3_date = dtkp2_date + 30 * 6
-            dtkp4_date = dtkp3_date + 365 * 4
-
-            if (isTruthy(input$dtkp3)) {
-              if (input$dtkp2 + 30 * 6 < input$dtkp3) {
-                dtkp3_date = input$dtkp3
-                dtkp4_date = dtkp3_date + 365 * 4
-
-                if (isTruthy(input$dtk4)) {
-                  if (input$dtkp3 + 365 * 4 < input$dtkp4) {
-                    dtkp4_date = input$dtkp4
-
-                  }
-                }
-
-              }
-
-            }
-
-          } else {
-            # hvis to vacciner givet med UNDER 1 måned
-            dtkp1_date = input$dtkp1
-            dtkp2_date = input$dtkp1 + 60
-            dtkp3_date = dtkp2_date + 30 * 6
-            dtkp4_date = dtkp3_date + 365 * 4
-          }
-
-        }
-
-
-
+    rbind(hib1_text, hib2_text, hib3_text,hib_special)
 
   })
 
   output$show_test <- renderTable({
-    hib()
+
+    hpv()
+
   })
+
+  output[["hib_box"]] <- renderUI({
+
+    if(hib()[4] == 0)return()
+    box(
+      width = 8,
+      title = "HIB",
+      textOutput("dateTexthib")
+      #textOutput("dateTextbdate"
+    )
+
+  })
+
 
 
 
@@ -803,7 +774,6 @@ server <- function(input, output, session) {
     ggplot(AllInputs(), aes(
       x = as_date(dates),
       y = 1,
-      ,
       col = as_date(dates) > Sys.Date()
     )) +
       geom_point(size = 4) +
@@ -876,6 +846,13 @@ server <- function(input, output, session) {
       " d. ",
       pcv()[[3]]
     )
+  })
+  output$dateTexthib  <- renderText({
+    paste0("OBS, HiB skal gives:",
+           " Første stik: ", hib()[1],
+           " Andet stik: ", hib()[2],
+           " Trejde stik: ",hib()[3])
+
   })
 
 
