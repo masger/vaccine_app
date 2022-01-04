@@ -312,6 +312,21 @@ server <- function(input, output, session) {
         value = pmax(input$m_other1, input$f_other1, input$r_other1)
       )
     }
+    if (isTruthy(input$pcv_other1)) {
+      updateDateInput(
+        session,
+        "pcv1",
+        value = input$pcv_other1
+      )
+    }
+    if (isTruthy(input$pcv_other2)) {
+      updateDateInput(
+        session,
+        "pcv1",
+        value = input$pcv_other2
+      )
+    }
+
     if (isTruthy(input$m_other2) &
         isTruthy(input$f_other2) & isTruthy(input$r_other2)) {
       updateDateInput(
@@ -779,12 +794,9 @@ server <- function(input, output, session) {
   output[["hib_box"]] <- renderUI({
 
     if(hib()[4] == 0)return()
-    box(
-      width = 8,
-      title = "HIB",
-      textOutput("dateTexthib")
+    h4(textOutput("dateTexthib"))
       #textOutput("dateTextbdate"
-    )
+
 
   })
 
@@ -871,6 +883,7 @@ server <- function(input, output, session) {
     )
   })
   output$dateTexthib  <- renderText({
+
     paste0("OBS, HiB skal gives:",
            " Første stik: ", hib()[1],
            " Andet stik: ", hib()[2],
