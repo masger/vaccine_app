@@ -48,9 +48,9 @@ ui <- dashboardPage(
 
         ### vacciner
         fluidRow(
-          box(
-            title = "Det danske vaccinationsprogram",
-            width = 4,
+          tabBox(width = 4,
+
+          tabPanel(title = "DiTeKiPol-Hib + PCV",
             dateInput('dtkp1',
                       label = 'Pentavac (DiTeKiPol-Hib):',
                       value = as.Date(NA)),
@@ -72,7 +72,8 @@ ui <- dashboardPage(
                       value = as.Date(NA)),
             dateInput('pcv3',
                       label = 'PCV-12:',
-                      value = as.Date(NA)),
+                      value = as.Date(NA))),
+          tabPanel(title = "MFR og HPV",
             dateInput('mfr1',
                       label = 'MFR:',
                       value = as.Date(NA)),
@@ -86,39 +87,30 @@ ui <- dashboardPage(
             dateInput('hpv2',
                       label = 'HPV 2:',
                       value = as.Date(NA))
-          ),
+          )),
 
-          box(
-            width = 8,
-            title = "Pentavac (DiTeKiPol-Hib)",
+          box(width = 8,
             #textOutput("dateTextbdate"),
+            h3("DiTeKiPol-Hib"),
             textOutput("dateTextdtkp1"),
             textOutput("dateTextdtkp2"),
             textOutput("dateTextdtkp3"),
-            textOutput("dateTextdtkp4")
-          ),
-          box(
-            width = 8,
-            title = "PCV",
+            textOutput("dateTextdtkp4"),
+            h3("PCV"),
+
             textOutput("dateTextpcv1"),
             textOutput("dateTextpcv2"),
-            textOutput("dateTextpcv3")
-          ),
-          box(
-            width = 8,
-            title = "MFR",
+            textOutput("dateTextpcv3"),
+            h3("MFR"),
             textOutput("dateTextmfr1"),
-            textOutput("dateTextmfr2")
-          ),
-          box(
-            width = 8,
-            title = "HPV",
+            textOutput("dateTextmfr2"),
+            h3("HPV"),
             textOutput("dateTexthpv1"),
             textOutput("dateTexthpv2"),
             textOutput("dateTexthpv3"),
             #textOutput("dateTextbdate"
-          ),
-          uiOutput("hib_box")
+
+            uiOutput("hib_box"))
 
 
         ),
@@ -218,10 +210,10 @@ ui <- dashboardPage(
             tabPanel(title = "PCV",
                      fluidRow(box(
                        width = 4,
-                       dateInput('pcv-other1',
+                       dateInput('pcv_other1',
                                  label = 'PCV1',
                                  value = as.Date(NA)),
-                       dateInput('pcv-other1',
+                       dateInput('pcv_other1',
                                  label = 'PCV2',
                                  value = as.Date(NA))
                      ))),
@@ -397,11 +389,42 @@ server <- function(input, output, session) {
   AllInputs <- reactive({
     myvalues <- NULL
     newvalues <- NULL
+    name_df <- data.table(vaccines = c("bdate"	,"dtkp1","dtkp2","dtkp3","dtkp4",
+                                        "pcv1",	"pcv2","pcv3",
+                                        "mfr1",	"mfr2",
+                                        "di_other1","di_other2","di_other3","di_other4",
+                                        "te_other1","te_other2","te_other3","te_other4",
+                                        "ki_other1","ki_other2","ki_other3","ki_other4",
+                                        "po_other1","po_other2","po_other3","po_other4",
+                                        "hib_other1","hib_other2","hib_other3","hib_other4",
+                                        "pcv_other1","pcv_other2","pcv_other3",
+                                        "m_other1","m_other2",
+                                        "f_other1","f_other2",
+                                        "r_other1","r_other2",
+                                        "hpv-other1","hpv-other2"),
+
+                          name = c("Fødselsdag",
+                                   "DTKP","DTKP","DTKP","DTKP",
+                                   "PCV","PCV","PCV",
+                                   "MFR","MFR",
+                                   "DI","DI","DI","DI",
+                                   rep("TE",4),
+                                   rep("KI",4),
+                                   rep("PO",4),
+                                   rep("HiB",4),
+                                   rep("PCV",3),
+                                   rep("M",2),
+                                   rep("F",2),
+                                   rep("R",2),
+                                   rep("HPV",2)))
+
+
     for (i in 1:length(names(input))) {
       newvalues <- data.table(vaccines = as.character(names(input)[i]),
                               dates = as.character(input[[names(input)[i]]]))
       myvalues <- rbind(myvalues, newvalues)
     }
+    myvalues = name_df[myvalues,on = "vaccines"]
     myvalues[dates != "TRUE" & !is.na(dates)]
   })
 
@@ -777,7 +800,7 @@ server <- function(input, output, session) {
       col = as_date(dates) > Sys.Date()
     )) +
       geom_point(size = 4) +
-      ggrepel::geom_text_repel(aes(x = as_date(dates), label = vaccines)) +
+      ggrepel::geom_text_repel(aes(x = as_date(dates), label = name)) +
       theme_bw() +
       labs(y = "", x = "") +
       guides(col = "none") +
