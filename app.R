@@ -614,9 +614,10 @@ server <- function(input, output, session) {
       if (input$dtkp1 > input$bdate + weeks(8)) {
         dtkp1_date = input$dtkp1
         valid = 1
-        dtkp2_date = input$dtkp1 + days(60)
-        dtkp3_date = dtkp2_date + months(6)
-        dtkp4_date = dtkp3_date + years(4)
+
+        dtkp2_date = max(input$dtkp1 + days(60),today)
+        dtkp3_date = max(dtkp2_date + months(6),today)
+        dtkp4_date = max(dtkp3_date + years(4),today)
 
         if (isTruthy(input$dtkp2)) {
           # hvis 2 vacciner givet
@@ -624,14 +625,15 @@ server <- function(input, output, session) {
             # hvis to vacciner givet med over 1 måned
             dtkp2_date = input$dtkp2
             valid2 = 1
-            dtkp3_date = dtkp2_date + months(6)
-            dtkp4_date = dtkp3_date + years(4)
+            dtkp3_date = max(dtkp2_date + months(6),today)
+            dtkp4_date = max(dtkp3_date + years(4),today)
 
             if (isTruthy(input$dtkp3)) {
               if (input$dtkp2 + 30 * 6 < input$dtkp3) {
                 dtkp3_date = input$dtkp3
                 valid3 = 1
-                dtkp4_date = dtkp3_date + years(4)
+                dtkp4_date = max(dtkp3_date + years(4),today)
+
 
                 if (isTruthy(input$dtk4)) {
                   if (input$dtkp3 + 365 * 4 < input$dtkp4) {
@@ -648,9 +650,11 @@ server <- function(input, output, session) {
           } else {
             # hvis to vacciner givet med UNDER 1 måned
             dtkp1_date = input$dtkp1
-            dtkp2_date = input$dtkp1 + days(60)
-            dtkp3_date = dtkp2_date + months(6)
-            dtkp4_date = dtkp3_date + years(4)
+
+            dtkp2_date = max(dtkp1_date + days(60),today)
+            dtkp3_date = max(dtkp2_date + months(6),today)
+            dtkp4_date = max(dtkp3_date + years(4),today)
+
           }
 
         }
