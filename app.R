@@ -561,12 +561,12 @@ server <- function(input, output, session) {
             valid2 = 1
           } else {
             mfr1_date = input$mfr1
-            mfr2_date = input$mfr1 + years(2.5)
+            mfr2_date = mfr1_date + years(2.5)
           }
         } else {
           # modtaget en vaccine
           mfr1_date = input$mfr1
-          mfr2_date = input$mfr1 + years(2.5)
+          mfr2_date = mfr1_date + years(2.5)
         }
       } else {
         # mindre end 12 mdr på vaccine tidspunkt
@@ -613,7 +613,7 @@ server <- function(input, output, session) {
       # mere end 8 uger på vaccine tidspunkt
       if (input$dtkp1 > input$bdate + weeks(8)) {
         dtkp1_date = input$dtkp1
-        valid = 1
+        valid1 = 1
 
         dtkp2_date = max(input$dtkp1 + days(60),today)
         dtkp3_date = max(dtkp2_date + months(6),today)
@@ -883,6 +883,11 @@ server <- function(input, output, session) {
 
         }
 
+      } else {
+        # hpv givet forkert
+        hpv1_date = input$bdate + years(12)
+        hpv2_date = hpv1_date + months(6)
+        hpv3_date = NA_Date_
       }
 
     } else {
