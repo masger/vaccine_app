@@ -538,9 +538,9 @@ server <- function(input, output, session) {
 
     if (!isTruthy(input$mfr1)) {
       #MFR ikke givet
-      if (input$bdate + months(15) > today) {
+      if (input$bdate + days(15*30) > today) {
         # Alder mindre 15 måneder dags dato
-        mfr1_date = input$bdate + months(15)
+        mfr1_date = input$bdate + days(15*30)
         mfr2_date = input$bdate + years(4)
       }  else {
         # Alder mere end 15 måneder dags dato
@@ -549,7 +549,7 @@ server <- function(input, output, session) {
       }
     } else {
       # MFR givet
-      if (input$mfr1 > input$bdate + months(12)) {
+      if (input$mfr1 > input$bdate + years(1)) {
         # mere end 12 mdr på vaccine tidspunkt
         valid1 = 1
         if (isTruthy(input$mfr1) & isTruthy(input$mfr2)) {
@@ -561,23 +561,23 @@ server <- function(input, output, session) {
             valid2 = 1
           } else {
             mfr1_date = input$mfr1
-            mfr2_date = mfr1_date + years(2.5)
+            mfr2_date = mfr1_date + years(2) + months(6)
           }
         } else {
           # modtaget en vaccine
           mfr1_date = input$mfr1
-          mfr2_date = mfr1_date + years(2.5)
+          mfr2_date = mfr1_date + years(2) + months(6)
         }
       } else {
         # mindre end 12 mdr på vaccine tidspunkt
-        if (input$bdate + months(15) > today) {
+        if (input$bdate + days(15*30) > today) {
           # mindre end 15 måneder
-          mfr1_date = input$bdate + months(15)
+          mfr1_date = input$bdate + days(15*30)
           mfr2_date = input$bdate + years(4)
         }  else {
           # ældre end 15 måneder
           mfr1_date = today
-          mfr2_date = today + years(2.5)
+          mfr2_date = today + years(2) + months(6)
         }
 
       }
@@ -774,8 +774,8 @@ server <- function(input, output, session) {
       if (input$pcv1 < input$bdate + 365) {
         pcv1_date = input$pcv1
         valid1 = 1
-        pcv2_date = max(pcv1_date + days(60),today)
-        pcv3_date = max(pcv2_date + months(6),today)
+        pcv2_date = pcv1_date + lubridate::days(60)
+        pcv3_date = pcv2_date + lubridate::days(6*30)
 
         if (isTruthy(input$pcv2)) {
           # hvis 2 vacciner givet
@@ -816,7 +816,7 @@ server <- function(input, output, session) {
 
     } else {
       # PCV ikke givet
-      if (input$bdate + months(12) > today) {
+      if (input$bdate + years(1) > today) {
         # Alder mindre 12 måneder dags dato
         pcv1_date = input$bdate + 30 * 12
         pcv2_date = pcv1_date + 60
@@ -838,7 +838,7 @@ server <- function(input, output, session) {
       # }
 
     }
-    if (input$bdate + months(24) > today) {
+    if (input$bdate + years(2) > today) {
       pcv1_text = as.character(as_date(pcv1_date, origin = "1970-01-01"))
       pcv2_text = as.character(as_date(pcv2_date, origin = "1970-01-01"))
       pcv3_text = as.character(as_date(pcv3_date, origin = "1970-01-01"))
@@ -871,13 +871,13 @@ server <- function(input, output, session) {
 
         if (isTruthy(input$hpv2)) {
           # hvis 2 vacciner givet, skal det være inden for 5 måneder og max 13 måneder
-          if (input$hpv1 + months(5) < input$hpv2 &
-              input$hpv1 + months(13) > input$hpv2) {
+          if (input$hpv1 + days(5*30) < input$hpv2 &
+              input$hpv1 + days(13*30) > input$hpv2) {
             # hvis to vacciner givet med over 1 måned
             hpv2_date = input$hpv2
             valid2 = 1
           } else {
-            hpv_temp = input$hpv2 + months(3)
+            hpv_temp = input$hpv2 + days(3*30)
             hpv3_date = min(hpv_temp, today)
           }
 
@@ -886,7 +886,7 @@ server <- function(input, output, session) {
       } else {
         # hpv givet forkert
         hpv1_date = input$bdate + years(12)
-        hpv2_date = hpv1_date + months(6)
+        hpv2_date = hpv1_date + days(6*30)
         hpv3_date = NA_Date_
       }
 
@@ -895,13 +895,13 @@ server <- function(input, output, session) {
       if (input$bdate + years(12) > today) {
         # Alder mindre 12 år dags dato
         hpv1_date = input$bdate + years(12)
-        hpv2_date = hpv1_date + months(6)
+        hpv2_date = hpv1_date + days(6*30)
         hpv3_date = NA_Date_
 
       }  else {
         # Alder mere end 12 måneder dags dato
         hpv1_date = today
-        hpv2_date = hpv1_date + months(6)
+        hpv2_date = hpv1_date + days(6*30)
         hpv3_date = NA_Date_
 
 
@@ -935,9 +935,9 @@ server <- function(input, output, session) {
           hib1_date = input$hib_other1
           valid1 = 1
           hib2_date = input$hib_other1 + days(60)
-          hib3_date = hib2_date + months(6)
+          hib3_date = hib2_date + days(6*30)
         }
-        if (input$bdate + months(12) > today &
+        if (input$bdate + years(1) > today &
             input$bdate + years(5) < today &
             !hib1_date == input$hib_other1) {
           hib1_date = Sys.Date()
@@ -947,11 +947,11 @@ server <- function(input, output, session) {
 
       }
       # alder mellem 5-12 måneder
-      if (input$bdate + months(5) > today &
-          input$bdate + months(12) < today &
+      if (input$bdate + days(5*30) > today &
+          input$bdate + years(1) < today &
           !isTruthy(input$hib_other1)) {
         hib1_date = Sys.Date()
-        hib2_date = Sys.Date() + months(2)
+        hib2_date = Sys.Date() + days(2*30)
         hib3_date = NA_Date_
       }
     }
@@ -965,7 +965,7 @@ server <- function(input, output, session) {
   })
 
   output$show_test <- renderTable({
-    mfr()
+    pcv()
 
   })
 
@@ -1063,7 +1063,7 @@ server <- function(input, output, session) {
       paste("")
     } else {
       paste0(
-        "Første vaccine med PCV ",
+        "Anden vaccine med PCV ",
         ifelse(pcv()$pcv2_text >= Sys.Date(), "skal gives", "er givet"),
         " d. ",
         pcv()$pcv2_text,
@@ -1077,7 +1077,7 @@ server <- function(input, output, session) {
       paste("")
     } else {
       paste0(
-        "Første vaccine med PCV ",
+        "Tredje vaccine med PCV ",
         ifelse(pcv()$pcv3_text >= Sys.Date(), "skal gives", "er givet"),
         " d. ",
         pcv()$pcv3_text,
